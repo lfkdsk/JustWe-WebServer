@@ -1,7 +1,6 @@
 package com.lfk.justwe_webserver;
 
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +16,7 @@ import com.lfk.justwe_webserver.WebServer.OnPostData;
 import com.lfk.justwe_webserver.WebServer.OnWebFileResult;
 import com.lfk.justwe_webserver.WebServer.OnWebStringResult;
 import com.lfk.justwe_webserver.WebServer.WebServer;
+import com.lfk.justwe_webserver.WebServer.WebServerDefault;
 import com.lfk.justweengine.Utils.logger.Logger;
 
 import java.io.File;
@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements OnLogResult {
     private WebServer server;
     private TextView textView;
     private ScrollView scrollView;
+    private boolean open = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,19 +53,17 @@ public class MainActivity extends AppCompatActivity implements OnLogResult {
         server.apply("/main", new OnWebFileResult() {
             @Override
             public File returnFile() {
-                return new File(Environment.getExternalStorageDirectory()
-                        + "/androidwebserver/welcome.html");
+                return new File(WebServerDefault.WebServerFiles + "/" + "welcome.html");
             }
         });
 
-        server.apply("/");
 
         server.apply("/lfkdsk", new OnPostData() {
             @Override
             public String OnPostData(HashMap<String, String> hashMap) {
                 String S = hashMap.get("LFKDSK");
                 Logger.e(S);
-                return "fuck you";
+                return "=_=";
             }
         });
 
@@ -73,7 +72,13 @@ public class MainActivity extends AppCompatActivity implements OnLogResult {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                server.startWebService();
+                if (!open) {
+                    server.startWebService();
+                    open = true;
+                } else {
+                    server.stopWebService();
+                    open = false;
+                }
             }
         });
     }
@@ -114,4 +119,9 @@ public class MainActivity extends AppCompatActivity implements OnLogResult {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        server.callOffWebService();
+    }
 }

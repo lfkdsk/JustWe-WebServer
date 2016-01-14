@@ -86,6 +86,7 @@ public class WebServer {
     }
 
     public void initWebService() {
+        WebServerDefault.init(engine.getApplicationContext());
         // 绑定Service
         engine.bindService(new Intent(engine, WebServerService.class),
                 serviceConnection,

@@ -24,7 +24,8 @@ public class RequestSolve extends Thread {
     // url in link
     private String url;
     private HashMap<String, String> params;
-    private String urlName = "";
+//    private String urlName = "";
+    private int type;
 
     public RequestSolve(Socket s) {
         super();
@@ -58,6 +59,7 @@ public class RequestSolve extends Thread {
                         break;
                     case "POST":
                         int last = s.indexOf('?');
+                        params = new HashMap<>();
                         if (last > 0) {
                             url = s.substring(5, last);
                             getParams(s.substring(last + 1, httpHeader));
@@ -152,7 +154,6 @@ public class RequestSolve extends Thread {
     }
 
     private void getParams(String url) {
-        params = new HashMap<>();
         int valueFirst;
         for (String s : url.split("&")) {
             valueFirst = s.indexOf("=");

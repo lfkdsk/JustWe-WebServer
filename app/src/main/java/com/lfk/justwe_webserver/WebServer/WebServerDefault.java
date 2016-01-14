@@ -3,13 +3,15 @@ package com.lfk.justwe_webserver.WebServer;
 import android.content.Context;
 import android.os.Environment;
 
+import java.io.File;
+
 /**
  * Created by liufengkai on 16/1/6.
  */
 public class WebServerDefault {
 
     public static final String WebServerFiles = Environment
-            .getExternalStorageDirectory() + "/androidwebserver";
+            .getExternalStorageDirectory() + "/JustWeWebServer";
 
     public static final String WebServerServiceConnected = "Service connected";
 
@@ -27,6 +29,10 @@ public class WebServerDefault {
 
     public static void init(Context context) {
         WebServerDefault.context = context;
+        File file = new File(WebServerFiles);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
     }
 
     /**

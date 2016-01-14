@@ -102,7 +102,10 @@ public class WebServerService extends Service {
 
     public void stopServer() {
         setIsRunning(false);
-
+        if(webServers != null) {
+            webServers.stopServer();
+            webServers.interrupt();
+        }
     }
 
     public void setIsRunning(boolean isRunning) {

@@ -1,6 +1,7 @@
 # JustWe-WebServer  
 
 Android手机上的Http服务器，可以用于内网／外网的数据交换。  
+![logo](https://github.com/lfkdsk/JustWeTools/blob/master/picture/justwe.png)  
 ps: 这个项目是[JustWeEngine](https://github.com/lfkdsk/JustWeEngine)游戏框架中处理网络事件的一部分。
 
 ## 如何使用

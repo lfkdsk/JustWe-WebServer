@@ -62,7 +62,7 @@ ps: 这个项目是[JustWeEngine](https://github.com/lfkdsk/JustWeEngine)游戏�
         });
         
  可以通过此种方法添加路由，并返回数据或者文件。
- 需要表单提交的入Post可以使用如下接口，返回一个HashMap存储key和value。
+ 需要表单提交的如Post可以使用如下接口，返回一个HashMap存储key和value。
 
  
         server.apply("/lfkdsk", new OnPostData() {

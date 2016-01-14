@@ -8,12 +8,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import com.lfk.justwe_webserver.WebServer.OnLogResult;
 import com.lfk.justwe_webserver.WebServer.WebServer;
 
 public class MainActivity extends AppCompatActivity implements OnLogResult {
     private WebServer server;
+    private TextView textView;
+    private ScrollView scrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,13 +26,11 @@ public class MainActivity extends AppCompatActivity implements OnLogResult {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        textView = (TextView) findViewById(R.id.main_log);
+        scrollView = (ScrollView) findViewById(R.id.main_scroll);
+
         server = new WebServer(MainActivity.this, this);
         server.initWebService();
-
-//        bindService(new Intent(MainActivity.this, WebServerService.class),
-//                serviceConnection,
-//                Context.BIND_AUTO_CREATE
-//        );
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -39,24 +41,6 @@ public class MainActivity extends AppCompatActivity implements OnLogResult {
         });
     }
 
-
-//    private ServiceConnection serviceConnection = new ServiceConnection() {
-//        @Override
-//        public void onServiceConnected(ComponentName name, IBinder service) {
-////            webServerService = ((WebServerService.LocalBinder) service).getService();
-//            Log.e("lll", "getweb");
-////            if (logResult != null)
-////                logResult.OnResult(WebServerDefault.WebServerServiceConnected);
-//        }
-//
-//        @Override
-//        public void onServiceDisconnected(ComponentName name) {
-////            webServerService = null;
-//            Log.e("lll", "error");
-////            if (logResult != null)
-////                logResult.OnResult(WebServerDefault.WebServerServiecDisconnected);
-//        }
-//    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -83,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements OnLogResult {
     @Override
     public void OnResult(String log) {
         Log.d("log", log);
+        textView.append(log + "\n");
+        scrollView.fullScroll(ScrollView.FOCUS_DOWN);
     }
 
     @Override

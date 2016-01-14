@@ -15,14 +15,17 @@ import android.os.IBinder;
 import com.lfk.justwe_webserver.R;
 
 /**
- * Created by liufengkai on 16/1/6.
+ * Service for Android
+ *
+ * @author liufengkai
+ *         Created by liufengkai on 16/1/6.
  */
 public class WebServerService extends Service {
     private OnLogResult logResult;
     private NotificationManager notificationManager;
     private Notification notification;
     private final IBinder mBinder = new LocalBinder();
-    private Server webServers;
+    private Servers webServers;
     private static Activity engine;
     private PendingIntent contentIntent;
     private boolean IsRunning;
@@ -34,6 +37,7 @@ public class WebServerService extends Service {
         notificationManager = (NotificationManager)
                 getSystemService(NOTIFICATION_SERVICE);
 
+        updateNotification("Open Service");
     }
 
     public static void init(Activity engine) {
@@ -46,25 +50,16 @@ public class WebServerService extends Service {
         return mBinder;
     }
 
-    private void showNotification() {
-
-        startForeground(0, notification);
-    }
-
-    private void updateNotification(String noti) {
-        if (notification == null) {
-            contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, engine.getClass()), 0);
-            Notification.Builder builder = new Notification.Builder(engine)
-                    .setContentTitle("WebServer")
-                    .setContentText(noti)
-                    .setContentIntent(contentIntent)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setWhen(System.currentTimeMillis());
-            notification = builder.getNotification();
-            notificationManager.notify(0, notification);
-        } else {
-            notificationManager.notify(0, notification);
-        }
+    private void updateNotification(String text) {
+        contentIntent = PendingIntent.getActivity(this, 0, new Intent(this, engine.getClass()), 0);
+        Notification.Builder builder = new Notification.Builder(engine)
+                .setContentTitle("WebServer")
+                .setContentText(text)
+                .setContentIntent(contentIntent)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setWhen(System.currentTimeMillis());
+        notification = builder.getNotification();
+        notificationManager.notify(0, notification);
     }
 
     @Override
@@ -98,7 +93,7 @@ public class WebServerService extends Service {
             }
         }
 
-        webServers = new Server();
+        webServers = new Servers(engine.getApplicationContext(), logResult, port);
         webServers.start();
     }
 

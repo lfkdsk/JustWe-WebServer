@@ -5,8 +5,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
+import android.os.Message;
 
 import java.util.HashMap;
 
@@ -23,6 +24,8 @@ public class WebServer {
     private WebServerService webServerService;
     private Integer webPort = null;
     private ServiceConnection serviceConnection;
+    private final int ERROR = -1;
+    private final int LOG = 1;
 
     public WebServer(Activity engine) {
         this.engine = engine;
@@ -51,7 +54,6 @@ public class WebServer {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 webServerService = ((WebServerService.LocalBinder) service).getService();
-                Log.e("lll", "getweb");
                 if (logResult != null)
                     logResult.OnResult(WebServerDefault.WebServerServiceConnected);
             }
@@ -59,7 +61,6 @@ public class WebServer {
             @Override
             public void onServiceDisconnected(ComponentName name) {
                 webServerService = null;
-                Log.e("lll", "error");
                 if (logResult != null)
                     logResult.OnResult(WebServerDefault.WebServerServiecDisconnected);
             }
@@ -69,10 +70,8 @@ public class WebServer {
 
 
     public void startWebService() {
-        Log.e("lll", "first");
         if (webServerService != null) {
-            Log.e("lll", "open");
-            webServerService.startServer(logResult,
+            webServerService.startServer(new MessageHandler(),
                     (webPort == null) ? WebServerDefault.WebDefaultPort : webPort);
         }
     }
@@ -95,7 +94,7 @@ public class WebServer {
         engine.unbindService(serviceConnection);
     }
 
-    public static void apply(String rule, OnWebResult result) {
+    public void apply(String rule, OnWebResult result) {
         webServerRule.put(rule, result);
     }
 
@@ -107,5 +106,32 @@ public class WebServer {
         this.logResult = logResult;
     }
 
+    public class MessageHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case LOG:
+                    logResult.OnResult(msg.obj.toString());
+                    break;
+                case ERROR:
+                    logResult.OnError(msg.obj.toString());
+                    break;
+            }
+        }
 
+        public void OnError(String str) {
+            Message message = this.obtainMessage();
+            message.what = ERROR;
+            message.obj = str;
+            sendMessage(message);
+        }
+
+        public void OnResult(String str) {
+            Message message = this.obtainMessage();
+            message.what = LOG;
+            message.obj = str;
+            sendMessage(message);
+        }
+    }
 }

@@ -21,7 +21,7 @@ import com.lfk.justwe_webserver.R;
  *         Created by liufengkai on 16/1/6.
  */
 public class WebServerService extends Service {
-    private OnLogResult logResult;
+    private WebServer.MessageHandler logResult;
     private NotificationManager notificationManager;
     private Notification notification;
     private final IBinder mBinder = new LocalBinder();
@@ -74,7 +74,7 @@ public class WebServerService extends Service {
         }
     }
 
-    public void startServer(OnLogResult logResult, int port) {
+    public void startServer(WebServer.MessageHandler logResult, int port) {
         this.logResult = logResult;
         // running
         setIsRunning(true);
@@ -95,9 +95,13 @@ public class WebServerService extends Service {
 
         webServers = new Servers(engine.getApplicationContext(), logResult, port);
         webServers.start();
+
+        updateNotification("running on " +
+                WebServerDefault.WebServerIp + ":" + port);
     }
 
     public void stopServer() {
+        setIsRunning(false);
 
     }
 

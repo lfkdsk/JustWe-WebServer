@@ -1,8 +1,14 @@
 package com.lfk.justwe_webserver.WebServer;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.Socket;
 
 /**
@@ -40,8 +46,9 @@ public class RequestSolve extends Thread {
                     case "GET":
                         // get request link
                         int httpHeader = s.indexOf(" HTTP/");
-                        params = s.substring(5, httpHeader);
-                        params = params.replaceAll("[/]+", "/");
+                        params = s.substring(4, httpHeader);
+//                        params = params.replaceAll("[/]+", "/");
+                        Servers.getLogResult().OnResult("visiting" + params);
                         break;
                     case "POST":
 
@@ -51,6 +58,53 @@ public class RequestSolve extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
             Servers.getLogResult().OnError(e.getMessage());
+        }
+
+        OnWebResult result = WebServer.getRule(params);
+        if (result != null) {
+            if (result instanceof OnWebStringResult) {
+                returnString(((OnWebStringResult) result).OnResult());
+            } else if (result instanceof OnWebFileResult) {
+                returnFile(((OnWebFileResult) result).returnFile());
+            }
+        }
+    }
+
+    private void returnString(String str) {
+        try {
+            OutputStream o = client.getOutputStream();
+            for (int i = 0;
+                 i < str.length();
+                 i++) {
+                o.write(str.charAt(i));
+            }
+            o.close();
+            client.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void returnFile(File file) {
+        if (file.exists()) {
+            try {
+                BufferedInputStream inputStream =
+                        new BufferedInputStream(
+                                new FileInputStream(file));
+                BufferedOutputStream out = new BufferedOutputStream(client.getOutputStream());
+                ByteArrayOutputStream tempOut = new ByteArrayOutputStream();
+                byte[] buf = new byte[4096];
+                int count;
+                while ((count = inputStream.read(buf)) != -1) {
+                    tempOut.write(buf, 0, count);
+                }
+                tempOut.flush();
+                out.write(tempOut.toByteArray());
+                out.flush();
+                client.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

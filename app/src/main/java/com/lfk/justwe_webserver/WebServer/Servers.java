@@ -19,13 +19,13 @@ public class Servers extends Thread {
     // listen to connect
     private ServerSocket serverSocket;
     // log / error listener
-    private static OnLogResult logResult;
+    private static WebServer.MessageHandler logResult;
     private Context context;
     private boolean IsRunning;
     // solve threads
     private static ExecutorService exe;
 
-    public Servers(Context context, OnLogResult logResult, int port) {
+    public Servers(Context context, WebServer.MessageHandler logResult, int port) {
         super();
         this.context = context;
         Servers.logResult = logResult;
@@ -35,7 +35,7 @@ public class Servers extends Thread {
             serverSocket = new ServerSocket(port, 0,
                     InetAddress.getByName(WebServerDefault.WebServerIp));
             logResult.OnResult("listen to :" + WebServerDefault.WebServerIp
-                    + WebServerDefault.WebServerIp);
+                    + ":" + port);
         } catch (IOException e) {
             e.printStackTrace();
             logResult.OnError("Server IO error");
@@ -67,7 +67,7 @@ public class Servers extends Thread {
         }
     }
 
-    public static OnLogResult getLogResult() {
+    public static WebServer.MessageHandler getLogResult() {
         return logResult;
     }
 }

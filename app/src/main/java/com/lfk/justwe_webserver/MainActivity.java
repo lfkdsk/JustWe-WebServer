@@ -1,6 +1,7 @@
 package com.lfk.justwe_webserver;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,7 +13,12 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.lfk.justwe_webserver.WebServer.OnLogResult;
+import com.lfk.justwe_webserver.WebServer.OnWebFileResult;
+import com.lfk.justwe_webserver.WebServer.OnWebStringResult;
 import com.lfk.justwe_webserver.WebServer.WebServer;
+import com.lfk.justweengine.Utils.logger.Logger;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity implements OnLogResult {
     private WebServer server;
@@ -23,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements OnLogResult {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Logger.init();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -31,6 +38,29 @@ public class MainActivity extends AppCompatActivity implements OnLogResult {
 
         server = new WebServer(MainActivity.this, this);
         server.initWebService();
+
+
+        server.apply("/lfk", new OnWebStringResult() {
+            @Override
+            public String OnResult() {
+                return "=======";
+            }
+        });
+
+        server.apply("/", new OnWebStringResult() {
+            @Override
+            public String OnResult() {
+                return "=_=";
+            }
+        });
+
+        server.apply("/main", new OnWebFileResult() {
+            @Override
+            public File returnFile() {
+                return new File(Environment.getExternalStorageDirectory()
+                        + "/androidwebserver/index.html");
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -66,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements OnLogResult {
 
     @Override
     public void OnResult(String log) {
-        Log.d("log", log);
+        Log.e("log", log);
         textView.append(log + "\n");
         scrollView.fullScroll(ScrollView.FOCUS_DOWN);
     }
@@ -75,4 +105,5 @@ public class MainActivity extends AppCompatActivity implements OnLogResult {
     public void OnError(String error) {
         Log.e("error", error);
     }
+
 }

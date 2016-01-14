@@ -9,6 +9,9 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 
+import com.lfk.justweengine.Utils.logger.Logger;
+
+import java.io.File;
 import java.util.HashMap;
 
 /**
@@ -96,6 +99,16 @@ public class WebServer {
 
     public void apply(String rule, OnWebResult result) {
         webServerRule.put(rule, result);
+    }
+
+    public void apply(final String rule) {
+        webServerRule.put(rule, new OnPermissionFile() {
+            @Override
+            public File OnPermissionFile(String name) {
+                Logger.e(WebServerDefault.WebServerFiles  + rule + name);
+                return new File(WebServerDefault.WebServerFiles  + rule + name);
+            }
+        });
     }
 
     public static OnWebResult getRule(String rule) {

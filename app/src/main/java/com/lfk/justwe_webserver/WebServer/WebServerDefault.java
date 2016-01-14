@@ -7,8 +7,9 @@ import android.os.Environment;
  * Created by liufengkai on 16/1/6.
  */
 public class WebServerDefault {
+
     public static final String WebServerFiles = Environment
-            .getExternalStorageDirectory() + "/WebServer_Files";
+            .getExternalStorageDirectory() + "/androidwebserver";
 
     public static final String WebServerServiceConnected = "Service connected";
 

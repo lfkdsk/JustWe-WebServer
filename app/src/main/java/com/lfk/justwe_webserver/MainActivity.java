@@ -13,12 +13,14 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.lfk.justwe_webserver.WebServer.OnLogResult;
+import com.lfk.justwe_webserver.WebServer.OnPostData;
 import com.lfk.justwe_webserver.WebServer.OnWebFileResult;
 import com.lfk.justwe_webserver.WebServer.OnWebStringResult;
 import com.lfk.justwe_webserver.WebServer.WebServer;
 import com.lfk.justweengine.Utils.logger.Logger;
 
 import java.io.File;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity implements OnLogResult {
     private WebServer server;
@@ -47,20 +49,25 @@ public class MainActivity extends AppCompatActivity implements OnLogResult {
             }
         });
 
-        server.apply("/", new OnWebStringResult() {
-            @Override
-            public String OnResult() {
-                return "=_=";
-            }
-        });
-
         server.apply("/main", new OnWebFileResult() {
             @Override
             public File returnFile() {
                 return new File(Environment.getExternalStorageDirectory()
-                        + "/androidwebserver/index.html");
+                        + "/androidwebserver/welcome.html");
             }
         });
+
+        server.apply("/");
+
+        server.apply("/lfkdsk", new OnPostData() {
+            @Override
+            public String OnPostData(HashMap<String, String> hashMap) {
+                String S = hashMap.get("LFKDSK");
+                Logger.e(S);
+                return "fuck you";
+            }
+        });
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -104,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements OnLogResult {
     @Override
     public void OnError(String error) {
         Log.e("error", error);
+
     }
 
 }

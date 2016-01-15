@@ -1,4 +1,4 @@
-package com.lfk.justwe_webserver.WebServer;
+package com.lfk.justwe_webserver.WebServer.Interface;
 
 import java.util.HashMap;
 

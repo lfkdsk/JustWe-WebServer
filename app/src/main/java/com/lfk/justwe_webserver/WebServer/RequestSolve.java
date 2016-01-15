@@ -1,5 +1,10 @@
 package com.lfk.justwe_webserver.WebServer;
 
+import com.lfk.justwe_webserver.WebServer.Interface.OnPostData;
+import com.lfk.justwe_webserver.WebServer.Interface.OnWebFileResult;
+import com.lfk.justwe_webserver.WebServer.Interface.OnWebResult;
+import com.lfk.justwe_webserver.WebServer.Interface.OnWebStringResult;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;

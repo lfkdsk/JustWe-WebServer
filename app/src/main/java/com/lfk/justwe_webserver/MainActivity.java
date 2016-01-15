@@ -11,10 +11,10 @@ import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.lfk.justwe_webserver.WebServer.OnLogResult;
-import com.lfk.justwe_webserver.WebServer.OnPostData;
-import com.lfk.justwe_webserver.WebServer.OnWebFileResult;
-import com.lfk.justwe_webserver.WebServer.OnWebStringResult;
+import com.lfk.justwe_webserver.WebServer.Interface.OnLogResult;
+import com.lfk.justwe_webserver.WebServer.Interface.OnPostData;
+import com.lfk.justwe_webserver.WebServer.Interface.OnWebFileResult;
+import com.lfk.justwe_webserver.WebServer.Interface.OnWebStringResult;
 import com.lfk.justwe_webserver.WebServer.WebServer;
 import com.lfk.justwe_webserver.WebServer.WebServerDefault;
 import com.lfk.justweengine.Utils.logger.Logger;

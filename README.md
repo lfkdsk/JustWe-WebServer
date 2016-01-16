@@ -11,11 +11,17 @@ ps: 这个项目是[JustWeEngine](https://github.com/lfkdsk/JustWeEngine)游戏�
 ## 快速入门
 ### 1.添加Service：
 使用前请先添加Service到manifest文件：  
-    
+
+``` xml
+
     <service android:name=".WebServer.WebServerService"/>
+    
+```
 
 ### 2.初始化\打开\关闭：  
-		
+
+``` java
+	
 	 private WebServer server;
 	 server = new WebServer(MainActivity.this, new OnLogResult() {
         @Override
@@ -29,23 +35,32 @@ ps: 这个项目是[JustWeEngine](https://github.com/lfkdsk/JustWeEngine)游戏�
         }
      });
      server.initWebService();
-    
      
-初始化的时候推荐实现一个OnLogResult用于接受log日志和错误。
+```    
+     
+初始化的时候推荐实现一个OnLogResult用于接受log日志和错误。  
+`OnLogResult`的返回数据是线程安全的，可以直接传送到View中打印出来。  
 当然也有其他的构造方法：
+``` java
 
 	public WebServer(Activity engine)；
 	public WebServer(Activity engine, OnLogResult logResult, int webPort)； // 端口
 	
+```	
 初始化之后：
+
+``` java
 
     server.startWebService();
     server.stopWebService();
-
+    
+```
 
 使用该方法打开监听\关闭。  
 
 ### 3.添加路由：
+
+``` java
 
         server.apply("/lfk", new OnWebStringResult() {
             @Override
@@ -61,9 +76,11 @@ ps: 这个项目是[JustWeEngine](https://github.com/lfkdsk/JustWeEngine)游戏�
             }
         });
         
+```        
  可以通过此种方法添加路由，并返回数据或者文件。
  需要表单提交的如Post可以使用如下接口，返回一个HashMap存储key和value。
 
+ ``` java
  
         server.apply("/lfkdsk", new OnPostData() {
             @Override
@@ -74,6 +91,7 @@ ps: 这个项目是[JustWeEngine](https://github.com/lfkdsk/JustWeEngine)游戏�
             }
         });
         
+```
 ### 4.获取／提交数据：
 
    向服务器提交数据，只需使用正常的get / post即可。 
